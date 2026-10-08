@@ -1,0 +1,5 @@
+# saleId|dateTime|productId|productName|quantity|unitPrice|total
+1|2026-10-05 10:15:22|102|Wireless Mouse|2|799.5|1599.0
+2|2026-10-05 14:40:05|104|Ballpoint Pen|20|10.0|200.0
+3|2026-10-06 11:02:48|101|Laptop|1|55000.0|55000.0
+4|2026-10-07 16:30:10|104|Ballpoint Pen|10|10.0|100.0

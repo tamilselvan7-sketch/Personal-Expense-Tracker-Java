@@ -1,0 +1,6 @@
+data/
+out/
+*.class
+.idea/
+.vscode/
+*.iml

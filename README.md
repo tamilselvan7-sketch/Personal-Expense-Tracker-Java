@@ -1,81 +1,121 @@
-# Personal Expense Tracker (Java)
+# Inventory & Stock Management System
 
-A simple console-based application to record and manage daily expenses, built with core Java only. No database, no GUI, no external libraries.
+A console-based inventory and sales tracker written in **Core Java**. It manages products, stock levels, and sales, and saves everything to plain text files, so your data is still there the next time you run it.
+
+Built as a learning project: no database, no GUI, no external libraries, and no frameworks.
 
 ## Features
 
-- Add, view, update and delete expenses
-- Search expenses by category or by date
-- Total expenses and category-wise totals
-- Highest expense finder
-- Sort expenses by amount (low to high or high to low)
-- Automatic loading from and saving to `expenses.txt`
-- Input validation (dates, positive amounts, valid IDs) with exception handling
+| Area | What you can do |
+|------|-----------------|
+| **Products** | Add, remove, update, view, search (by ID or name), filter by category |
+| **Stock** | Add stock, reduce stock, see current stock, low-stock alerts with a configurable threshold |
+| **Sales** | Sell products (stock reduces automatically), receipts, date/time stamps, full sales history |
+| **Reports** | Total products, total stock, inventory value, total sales, most-sold products, category-wise summary |
+| **Sorting** | Sort by ID, name, price, or stock quantity |
+| **Persistence** | Data saved to text files after every change and loaded on start-up |
+
+## Concepts Demonstrated
+
+- **OOP**: encapsulation, constructors, private fields, getters/setters with validation
+- **Collections**: `HashMap<Integer, Product>` for products, `ArrayList<Sale>` for sales, `TreeMap` for category grouping
+- **Sorting**: `Comparator` and `Collections.sort`
+- **File handling**: `BufferedReader` / `BufferedWriter` with try-with-resources
+- **Exception handling**: input validation, corrupted-file recovery
+- **Enum**: `InventoryManager.SortBy`
+- **Java time API**: `LocalDateTime` and `DateTimeFormatter`
 
 ## Project Structure
 
 ```
-Personal-Expense-Tracker-Java/
-├── Expense.java          # Expense model (fields, constructor, getters/setters, toString)
-├── ExpenseTracker.java   # Main class: menu and all operations
-├── expenses.txt          # Saved data (one expense per line)
-└── README.md
+InventoryStockManagement/
+├── src/
+│   ├── InventoryApp.java      # Console menu and user input/output
+│   ├── Product.java           # Product model
+│   ├── Sale.java              # Sale record model
+│   ├── InventoryManager.java  # Product and stock logic
+│   ├── SaleManager.java       # Sales logic and statistics
+│   └── FileManager.java       # Reads/writes the text files
+├── sample-data/               # Example data files you can copy to try the app
+├── data/                      # Created automatically on first run (git-ignored)
+├── README.md
+└── .gitignore
 ```
 
-## Java Concepts Used
+## How the Classes Work Together
 
-Classes and objects, constructors, encapsulation (private fields, getters/setters), `ArrayList`, `TreeMap`, methods, if-else, switch-case, loops, exception handling (`InputMismatchException`, `NumberFormatException`, `IOException`, `DateTimeParseException`), file handling (`FileReader`, `FileWriter`, `BufferedReader`, `PrintWriter`), searching, sorting, and string handling.
+```
+InventoryApp  (menu, Scanner input, printing)
+   ├── InventoryManager ── HashMap<Integer, Product>
+   ├── SaleManager ─────── ArrayList<Sale>   (uses InventoryManager to check/reduce stock)
+   └── FileManager ─────── data/products.txt, data/sales.txt, data/config.txt
+```
 
-## How to Run
+- `InventoryApp` is the only class that talks to the user.
+- `InventoryManager` and `SaleManager` hold the rules and never print or touch files.
+- `FileManager` is the only class that touches files.
 
-Requires JDK 8 or later.
+## Requirements
 
+- JDK 11 or newer (`javac -version` to check)
+
+## Compile and Run
+
+From the project root:
+
+**Windows / macOS / Linux**
 ```bash
-javac Expense.java ExpenseTracker.java
-java ExpenseTracker
+mkdir out
+javac -d out src/*.java
+java -cp out InventoryApp
 ```
 
-Run the commands from the project folder so `expenses.txt` is found.
+> On Windows PowerShell, use `javac -d out (Get-ChildItem src\*.java)` if the `*.java` wildcard is not expanded.
 
-## Data File Format
-
-Each line: `id|date|category|description|amount`
-
-```
-1|2026-10-01|Food|Lunch at cafe|250.0
-```
-
-## Sample Output
-
-```
-5 expense(s) loaded from expenses.txt.
-
-===== PERSONAL EXPENSE TRACKER =====
-1. Add Expense
-...
-12. Exit
-Enter your choice: 5
-Total Expenses: 3399.50 (5 records)
-
-Enter your choice: 6
---- Category-wise Expenses ---
-Education       : 899.50
-Entertainment   : 450.00
-Food            : 1450.00
-Transport       : 600.00
-
-Enter your choice: 9
-Highest Expense:
-ID: 4   | Date: 2026-10-05 | Category: Food           | Amount:   1200.00 | Groceries
+**Try it with sample data** (optional):
+```bash
+mkdir data
+cp sample-data/* data/        # Windows: copy sample-data\* data\
+java -cp out InventoryApp
 ```
 
-## Future Enhancements
+## Data File Formats
 
-1. Monthly and yearly expense reports
-2. Budget limits with overspending alerts
-3. Export data to CSV
-4. Date-range search
-5. Recurring expenses (rent, subscriptions)
+Files use the `|` character as a separator. Lines starting with `#` are comments.
+
+**data/products.txt** : `id|name|category|price|quantity`
+```
+101|Laptop|Electronics|55000.0|12
+103|Notebook A4|Stationery|45.0|4
+```
+
+**data/sales.txt** : `saleId|dateTime|productId|productName|quantity|unitPrice|total`
+```
+1|2026-10-05 10:15:22|102|Wireless Mouse|2|799.5|1599.0
+```
+
+**data/config.txt** : the low-stock threshold (a single number)
+```
+5
+```
+
+Missing files are treated as empty. Invalid lines are skipped with a warning instead of crashing the program.
+
+## Validation Rules
+
+- Product ID must be positive and unique
+- Price cannot be negative
+- Stock cannot be negative
+- Quantity sold must be positive and cannot exceed available stock
+- Invalid menu or number input is re-requested instead of crashing
+
+## Possible Improvements
+
+- Supplier and purchase-order tracking
+- Export reports to CSV
+- Sales filtering by date range
+- Unit tests with JUnit
+- Replace text files with a database (JDBC / SQLite)
 
 ## License
 
