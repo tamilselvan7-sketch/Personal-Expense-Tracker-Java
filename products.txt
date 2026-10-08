@@ -1,7 +1,0 @@
-# id|name|category|price|quantity
-101|Laptop|Electronics|55000.0|12
-102|Wireless Mouse|Electronics|799.5|40
-103|Notebook A4|Stationery|45.0|4
-104|Ballpoint Pen|Stationery|10.0|150
-105|Office Chair|Furniture|4500.0|3
-106|USB Cable|Electronics|199.0|25
