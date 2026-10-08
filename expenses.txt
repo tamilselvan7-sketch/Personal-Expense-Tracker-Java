@@ -1,0 +1,5 @@
+1|2026-10-01|Food|Lunch at cafe|250.0
+2|2026-10-02|Transport|Monthly bus pass|600.0
+3|2026-10-03|Education|Java programming book|899.5
+4|2026-10-05|Food|Groceries|1200.0
+5|2026-10-06|Entertainment|Movie tickets|450.0
